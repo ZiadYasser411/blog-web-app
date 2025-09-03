@@ -4,7 +4,13 @@ import { revalidatePath } from "next/cache";
 
 export async function getAllUsers() {
     try {
-        const users = await prisma.user.findMany();
+        const users = await prisma.user.findMany({
+            include: {
+                _count: {
+                    select: { posts: true, comments: true },
+                },
+            }
+        });
         return users;
     } catch (error) {
         console.error("Error getting all users:", error);

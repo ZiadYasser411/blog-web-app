@@ -2,6 +2,16 @@
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
+export async function getAllUsers() {
+    try {
+        const users = await prisma.user.findMany();
+        return users;
+    } catch (error) {
+        console.error("Error getting all users:", error);
+        throw new Error("Failed to get all users");
+    }
+}
+
 export async function getUserById(id: string) {
     try {
         const user = await prisma.user.findUnique({ 

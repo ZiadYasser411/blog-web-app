@@ -1,5 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
 
 function generateSlug(title: string): string {
   return title
@@ -106,5 +107,42 @@ export async function editPost(id: string, title: string, content: string) {
   } catch (error) {
     console.error("Error editing post:", error);
     throw new Error("Failed to edit post");
+  }
+}
+
+export async function toggleLike(PostId: string, userId: string) {
+  try {
+    const post = await prisma.post.findUnique({ where: { id: PostId } });
+    if(!post) throw new Error("Post not found");
+    const isLiked = post.likedBy.includes(userId);
+    await prisma.post.update({
+      where: {
+        id: PostId,
+      },
+      data: {
+        likedBy: isLiked 
+        ? post.likedBy.filter((id) => id !== userId) 
+        : [...post.likedBy, userId],
+        }
+    });
+    revalidatePath(`/posts/${PostId}`);
+    return {success: true, isLiked: !isLiked, likeCount: post.likedBy.length};
+  } catch (error) {
+    console.error("Error liking post:", error);
+    throw new Error("Failed to like post");
+  }
+}
+
+export async function isPostLikedByUser(PostId: string, userId: string) {
+  try {
+    const post = await prisma.post.findUnique({ 
+      where: { id: PostId },
+      select: { likedBy: true }, 
+    });
+
+    return post? post.likedBy.includes(userId) : false;
+  } catch (error) {
+    console.error("Error checking if post is liked by user:", error);
+    throw new Error("Failed to check if post is liked by user");
   }
 }

@@ -43,7 +43,7 @@ export async function editComment(id: string, content: string) {
                 content,
             },
         });
-        revalidatePath(`/posts/${id}`);
+        revalidatePath(`/posts/${comment.postId}`);
         return comment;
     } catch (error) {
         console.error("Error editing comment:", error);

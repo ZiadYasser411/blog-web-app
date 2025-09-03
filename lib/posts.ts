@@ -1,4 +1,4 @@
-"user-server";
+"use server";
 import prisma from "@/lib/prisma";
 
 function generateSlug(title: string): string {

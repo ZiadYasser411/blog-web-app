@@ -59,16 +59,22 @@ export async function createPost(
     throw new Error("Title and authorId are required");
   }
   try {
+    const userExists = await prisma.user.findUnique({ where: { id: authorId } });
+    if (!userExists) {
+      throw new Error("User does not exist");
+    }
     const slug = generateSlug(title);
     const post = await prisma.post.create({
       data: {
         title,
         content,
         slug,
-        authorId,
+        author: {connect: {id: authorId} },
         tags,
       },
+      include: { author: true }
     });
+    revalidatePath("/");
     return post;
   } catch (error) {
     console.error("Error creating post:", error);

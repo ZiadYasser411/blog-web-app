@@ -32,7 +32,7 @@ export function LoginForm({
           </div>
           <div className="flex flex-col gap-3">
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Email<a className="text-red-500">*</a></Label>
               <Input
                 id="email"
                 type="email"
@@ -42,7 +42,7 @@ export function LoginForm({
             </div>
             <div className="grid gap-2">
               <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">Password<a className="text-red-500">*</a></Label>
                   <a
                     href="#"
                     className="ml-auto text-sm underline-offset-2 text-gray-400 font-medium hover:underline"

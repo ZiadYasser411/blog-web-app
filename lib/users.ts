@@ -40,12 +40,12 @@ export async function getUserById(id: string) {
     }
 }
 
-export async function createUser(email: string, name: string, username: string) {
-    if(!email || !name || !username) {
-        throw new Error("Email, name, and username are required");
+export async function createUser(email: string, firstName: string, lastName: string, username: string, password: string) {
+    if(!email || !firstName || !lastName || !username || !password) {
+        throw new Error("Email, first name, last name, username and password are required");
     }
     try {
-        const user = await prisma.user.create({ data: { email, name, username } });
+        const user = await prisma.user.create({ data: { email, firstName, lastName, username, password} });
         revalidatePath("/");
         return user;
     } catch (error) {
@@ -65,9 +65,9 @@ export async function deleteUser(id: string) {
     }
 }
 
-export async function editUser(id: string, name: string, username: string) {
+export async function editUser(id: string, firstName: string, lastName: string, username: string) {
     try {
-        const user = await prisma.user.update({ where: { id }, data: { name, username } });
+        const user = await prisma.user.update({ where: { id }, data: { firstName, lastName, username } });
         revalidatePath("/");
         return user;
     } catch (error) {

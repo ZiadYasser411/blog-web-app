@@ -1,6 +1,7 @@
 "use server";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function getAllUsers() {
@@ -78,5 +79,22 @@ export async function editUser(id: string, firstName: string, lastName: string, 
     } catch (error) {
         console.error("Error editing user:", error);
         throw new Error("Failed to edit user");
+    }
+}
+
+export async function loginUser(formdata: FormData): Promise<void> {
+    const email = formdata.get("email") as string;
+    const password = formdata.get("password") as string;
+    if (!email || !password) {
+        throw new Error("Username and password are required");
+    }
+    try {
+        const user = await prisma.user.findUnique({ where: { email } });
+        if (!user || user.password !== password) {
+            throw new Error("Invalid username or password");
+        }
+    } catch (error) {
+        console.error("Error logging in user:", error);
+        throw new Error("Failed to log in user");
     }
 }

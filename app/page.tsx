@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import UserForm from "@/components/UserForm";
 import { getAllUsers } from "@/lib/users";
+import Link from "next/link";
 
 export default async function Home() {
   const users = await getAllUsers();
@@ -16,12 +17,13 @@ export default async function Home() {
             <li key={user.id} className="flex items-center-safe">
               <div className="pr-4">
                 <Avatar>
-                  <AvatarImage src=""/>
-                  <AvatarFallback> {user.name.substring(0, 1).toUpperCase()}</AvatarFallback>
+                  <AvatarFallback> {user.firstName.substring(0, 1).toUpperCase()}{user.lastName.substring(0, 1).toUpperCase()}</AvatarFallback>
                 </Avatar>
               </div>
               <div className="">
-                <h2 className="text-lg font-bold">{user.name}</h2>
+                <Link href={`/users/${user.id}`}>
+                  <h2 className="text-lg font-bold">{user.firstName} {user.lastName}</h2>
+                </Link>
                 <p className="text-xs text-gray-400">{user.email}</p>
                 <div className="flex">
                   <p className="text-xs text-gray-400 pr-2">posts: {user._count.posts}</p>

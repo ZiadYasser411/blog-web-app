@@ -26,7 +26,10 @@ export function RegisterForm({
             </a>
             <h1 className="text-xl font-bold tracking-tight">Register Account</h1>
             <div className="text-center text-sm">
-              Create your account and join our blog now!
+              You already have an account?{" "}
+              <a href="/login" className="underline underline-offset-4">
+                Login
+              </a>
             </div>
           </div>
           <div className="flex flex-col gap-3">

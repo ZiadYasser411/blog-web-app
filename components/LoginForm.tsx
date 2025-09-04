@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { loginUser } from "@/lib/users"
 
 export function LoginForm({
   className,
@@ -10,7 +11,7 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <form>
+      <form action={loginUser}>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col items-center gap-2">
             <a

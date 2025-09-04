@@ -15,7 +15,7 @@ function UserForm() {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-md">
       <h1 className="text-2xl font-bold mb-6">Create User</h1>
       <form
         action={CreateUserAction}

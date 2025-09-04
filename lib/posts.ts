@@ -1,5 +1,6 @@
 "use server";
 import prisma from "@/lib/prisma";
+import { Tag } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 function generateSlug(title: string): string {
@@ -16,7 +17,8 @@ export async function getPosts() {
         author: {
           select: {
             id: true,
-            name: true,
+            firstName: true,
+            lastName: true,
             username: true,
           },
         },
@@ -25,7 +27,8 @@ export async function getPosts() {
             commenter: {
               select: {
                 id: true,
-                name: true,
+                firstName: true,
+                lastName: true,
                 username: true,
               },
             },
@@ -53,7 +56,7 @@ export async function createPost(
   title: string,
   content: string,
   authorId: string,
-  tags: string[]
+  tags: Tag[]
 ) {
   if (!title || !authorId) {
     throw new Error("Title and authorId are required");

@@ -9,21 +9,10 @@ export function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  async function CreateUserAction(formdata: FormData) {
-    "use server";
-    const email = formdata.get("email") as string;
-    const firstName = formdata.get("firstName") as string;
-    const lastName = formdata.get("lastName") as string;
-    const username = formdata.get("username") as string;
-    const password = formdata.get("password") as string;
-    if (email && firstName && lastName && username && password) {
-      await createUser(email, firstName, lastName, username, password);
-    }
-  }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <form action={CreateUserAction}>
+      <form action={createUser}>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col items-center gap-2">
             <a

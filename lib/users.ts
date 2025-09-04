@@ -1,6 +1,7 @@
 "use server";
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function getAllUsers() {
     try {
@@ -40,18 +41,22 @@ export async function getUserById(id: string) {
     }
 }
 
-export async function createUser(email: string, firstName: string, lastName: string, username: string, password: string) {
+export async function createUser(formdata : FormData): Promise<void>{
+    const email = formdata.get("email") as string;
+    const firstName = formdata.get("firstName") as string;
+    const lastName = formdata.get("lastName") as string;
+    const username = formdata.get("username") as string;
+    const password = formdata.get("password") as string;
     if(!email || !firstName || !lastName || !username || !password) {
         throw new Error("Email, first name, last name, username and password are required");
     }
     try {
-        const user = await prisma.user.create({ data: { email, firstName, lastName, username, password} });
-        revalidatePath("/");
-        return user;
+        await prisma.user.create({ data: { email, firstName, lastName, username, password} });
     } catch (error) {
         console.error("Error creating user:", error);
         throw new Error("Failed to create user");
     }
+    redirect("/login");
 }
 
 export async function deleteUser(id: string) {

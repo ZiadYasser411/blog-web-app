@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getAllUsers } from "@/lib/users";
+import { getAllUsers } from "@/lib/service/userService";
 import Link from "next/link";
 
 export default async function Home() {

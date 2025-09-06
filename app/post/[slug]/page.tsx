@@ -9,6 +9,7 @@ import { handleCreateComment } from "../actions";
 import { toggleLikeAction, toggleCommentLikeAction } from "@/app/post/actions";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/options";
+import SignOutButton from "@/components/auth/SignOut";
 
 export default async function PostPage({
   params,
@@ -31,6 +32,7 @@ export default async function PostPage({
 
   return (
     <div className="pt-6 md:pt-10">
+      <SignOutButton />
       <article className="bg-background mx-auto max-w-3xl space-y-4 rounded-lg border p-4 md:p-6 shadow-sm">
         <PostHeader authorName={authorName} authorImage={post.author.image} createdAt={createdAt} userLink={userLink}/>
 

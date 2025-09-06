@@ -27,7 +27,7 @@ export async function getPost(id: string) {
 }
 
 export async function getPostBySlug(slug: string) {
-  return postRepository.getPostBySlug(slug);
+  return await postRepository.getPostBySlug(slug);
 }
 
 export async function createPost(title: string, content: string, authorId: string, tags: Tag[]) {
@@ -57,6 +57,12 @@ export async function deletePost(id: string, authorId: string, sessionId: string
     throw Object.assign(new Error("Unauthorized"), { status: 403 });
   postRepository.deletePost(id);
   return { deleted: true };
+}
+
+export async function toggleLike(postId: string, userId: string) {
+  if(!postId) throw Object.assign(new Error("Post id is required"), { status: 400 });
+  if(!userId) throw Object.assign(new Error("User id is required"), { status: 400 });
+  return postRepository.toggleLike(postId, userId);
 }
 
 

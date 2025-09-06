@@ -2,7 +2,7 @@ import { commentRepository } from "../repository/commentRepository";
 
 export async function createComment(postId: string, content: string, commenterId: string) {
     if(!postId || !content || !commenterId) throw Object.assign(new Error("PostId, content, and commenterId are required"));
-    return commentRepository.createComment(content, postId, commenterId);
+    return commentRepository.createComment(postId, content, commenterId);
 }
 
 export async function getCommentsByPostId(postId: string) {

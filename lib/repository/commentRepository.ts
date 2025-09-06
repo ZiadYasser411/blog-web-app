@@ -1,7 +1,7 @@
 import prisma from "../prisma";
 
 export const commentRepository = {
-  createComment: (content: string, postId: string, commenterId: string) => {
+  createComment: (postId: string, content: string, commenterId: string) => {
     return prisma.comment.create({
       data: {
         content,

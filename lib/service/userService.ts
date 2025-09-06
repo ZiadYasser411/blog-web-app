@@ -1,16 +1,16 @@
 import bcrypt from "bcrypt";
-import { usersRepository } from "../repository/userRepository";
+import { userRepository } from "../repository/userRepository";
 
 type updatableUserFields = "firstName" | "lastName" | "username" | "image";
 
 export async function getAllUsers() {
-  return usersRepository.listAllUsers();
+  return userRepository.listAllUsers();
 }
 
 export async function getUser(id: string) {
   if (id.length === 0)
     throw Object.assign(new Error("User id is required"), { status: 400 });
-  return usersRepository.getUserById(id);
+  return userRepository.getUserById(id);
 }
 
 export async function createUser(
@@ -27,14 +27,14 @@ export async function createUser(
       ),
       { status: 400 }
     );
-  const existingEmail = await usersRepository.getUserByEmail(email);
-  const existingUsername = await usersRepository.getUserByUsername(username);
+  const existingEmail = await userRepository.getUserByEmail(email);
+  const existingUsername = await userRepository.getUserByUsername(username);
   if (existingEmail)
     throw Object.assign(new Error("Email already exists"), { status: 409 });
   if (existingUsername)
     throw Object.assign(new Error("Username already exists"), { status: 409 });
   const hashedPassword = await bcrypt.hash(password, 12);
-  return usersRepository.createUser({
+  return userRepository.createUser({
     email,
     password: hashedPassword,
     firstName,
@@ -62,7 +62,7 @@ export async function updateUser(
     throw Object.assign(new Error("No data to update"), { status: 400 });
 
   if (data.username) {
-    const existingUsername = await usersRepository.getUserByUsername(
+    const existingUsername = await userRepository.getUserByUsername(
       data.username
     );
     if (existingUsername && existingUsername.id !== id)
@@ -71,7 +71,7 @@ export async function updateUser(
       });
   }
 
-  return usersRepository.editUser(id, data);
+  return userRepository.editUser(id, data);
 }
 
 export async function deleteUser(id: string, sessionId: string) {
@@ -79,6 +79,6 @@ export async function deleteUser(id: string, sessionId: string) {
     throw Object.assign(new Error("User id is required"), { status: 400 });
   if (sessionId !== id)
     throw Object.assign(new Error("Unauthorized"), { status: 403 });
-  usersRepository.deleteUser(id);
+  userRepository.deleteUser(id);
   return { deleted: true };
 }

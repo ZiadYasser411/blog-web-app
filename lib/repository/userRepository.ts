@@ -12,7 +12,7 @@ const baseUserSelect = {
   updatedAt: true,
 };
 
-export const usersRepository = {
+export const userRepository = {
   listAllUsers: () => {
     return prisma.user.findMany({
       select: {

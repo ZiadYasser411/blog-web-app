@@ -1,3 +1,4 @@
+import { get } from "http";
 import prisma from "../prisma";
 import { Tag } from "@prisma/client";
 
@@ -47,6 +48,29 @@ export const postRepository = {
   getPostById: (id: string) => {
     return prisma.post.findUnique({
       where: { id },
+      select: {
+        ...basePostSelect,
+        _count: { select: { comments: true } },
+        comments: {
+          orderBy: { createdAt: "desc" },
+          include: {
+            commenter: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                image: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  },
+
+  getPostBySlug: (slug: string) => {
+    return prisma.post.findUnique({
+      where: { slug },
       select: {
         ...basePostSelect,
         _count: { select: { comments: true } },

@@ -26,6 +26,10 @@ export async function getPost(id: string) {
   return postRepository.getPostById(id);
 }
 
+export async function getPostBySlug(slug: string) {
+  return postRepository.getPostBySlug(slug);
+}
+
 export async function createPost(title: string, content: string, authorId: string, tags: Tag[]) {
   if (!title || !content || !authorId) {
     throw Object.assign(new Error("Title, content and authorId are required"));

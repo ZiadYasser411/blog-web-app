@@ -1,51 +1,42 @@
+// components/like/LikeToggle.tsx
 "use client";
 
 import { useState, useTransition } from "react";
 import { Heart } from "lucide-react";
-import { toggleLikeAction } from "@/app/post/actions";
 import { cn } from "@/lib/utils";
 
-type Props = {
-  postId: string;
-  slug?: string;
-  initialLiked: boolean;
-  initialCount: number;
-  className?: string;
-};
+type ToggleResult = { liked: boolean; likeCount?: number };
 
-export default function LikeButton({
-  postId,
-  slug,
+export default function LikeToggle({
   initialLiked,
-  initialCount,
+  onToggle,               // server action pre-bound with ids
   className,
-}: Props) {
-  const [liked, setLiked]   = useState(initialLiked);
-  const [count, setCount]   = useState(initialCount);
-  const [isPending, start]  = useTransition();
+  size = 20,
+  onResult,               // optional: parent can react to server result
+}: {
+  initialLiked: boolean;
+  onToggle: () => Promise<ToggleResult>;
+  className?: string;
+  size?: number;
+  onResult?: (r: ToggleResult) => void;
+}) {
+  const [liked, setLiked] = useState(initialLiked);
+  const [isPending, start] = useTransition();
 
-  async function onToggle() {
-    // optimistic update
+  function handleClick() {
+    // optimistic fill/unfill
     setLiked((v) => !v);
-    setCount((c) => c + (liked ? -1 : 1));
 
     start(async () => {
       try {
-        const res = await toggleLikeAction(postId, slug);
-        // sync with server truth in case of races
-        setLiked(res.liked);
-        setCount(res.likeCount);
-      } catch (err: any) {
+        const res = await onToggle();
+        setLiked(res.liked);       // sync to server truth
+        onResult?.(res);
+      } catch (e: any) {
         // rollback on error
         setLiked(initialLiked);
-        setCount(initialCount);
-
-        // if not authenticated, send to login
-        if (typeof window !== "undefined" && /Unauthorized/i.test(String(err?.message))) {
-          const target = slug ? `/login?callbackUrl=/post/${encodeURIComponent(slug)}` : "/login";
-          window.location.href = target;
-        } else {
-          console.error("Like failed:", err);
+        if (/Unauthorized|401/.test(String(e?.message))) {
+          window.location.href = "/login";
         }
       }
     });
@@ -54,22 +45,21 @@ export default function LikeButton({
   return (
     <button
       type="button"
-      onClick={onToggle}
+      onClick={handleClick}
       disabled={isPending}
       aria-pressed={liked}
       aria-label={liked ? "Unlike" : "Like"}
       className={cn(
-        "inline-flex items-center gap-1 rounded-md px-2 py-1 text-sm",
-        "transition-opacity disabled:opacity-60",
+        "inline-flex items-center rounded-md p-1 transition-opacity disabled:opacity-60",
         className
       )}
     >
       <Heart
-        className={cn(
-          "h-5 w-5 transition-transform",
-          liked ? "text-rose-500 fill-current" : "text-foreground"
-        )}
+        width={size}
+        height={size}
+        className={cn(liked ? "text-rose-500 fill-current" : "text-foreground")}
       />
+      <span className="sr-only">{liked ? "Unlike" : "Like"}</span>
     </button>
   );
 }

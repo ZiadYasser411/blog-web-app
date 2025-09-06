@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { usersRepository } from "../repo/userRepository";
+import { usersRepository } from "../repository/userRepository";
 
 type updatableUserFields = "firstName" | "lastName" | "username" | "image";
 

@@ -1,13 +1,16 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
 
 export default function PostHeader({
   authorName,
   authorImage,
   createdAt,
+  userLink,
 }: {
   authorName: string;
   authorImage?: string | null;
   createdAt: string;
+  userLink?: string;
 }) {
   const initials = authorName
     .split(" ")
@@ -23,7 +26,7 @@ export default function PostHeader({
         <AvatarFallback>{initials}</AvatarFallback>
       </Avatar>
       <div className="min-w-0">
-        <h1 className="text-lg font-semibold leading-none">{authorName}</h1>
+        <Link href={userLink as string} className="text-lg font-semibold leading-none">{authorName}</Link>
         <p className="text-muted-foreground text-xs">{createdAt}</p>
       </div>
     </header>

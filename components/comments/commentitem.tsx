@@ -1,6 +1,7 @@
 // components/comments/CommentItem.tsx
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import LikeToggle from "@/components/ui/likebutton";
+import Link from "next/link";
 
 type ToggleResult = { liked: boolean; likeCount: number };
 
@@ -11,14 +12,14 @@ export default function CommentItem({
   commenter,
   currentUserId,
   likedBy,
-  onToggleLike, // pre-bound server action for this comment
+  onToggleLike,
 }: {
   id: string;
   content: string;
   createdAt: string | Date;
-  commenter: { firstName: string; lastName: string; image?: string | null };
+  commenter: { id: string; firstName: string; lastName: string; image?: string | null };
   currentUserId?: string;
-  likedBy?: string[]; // if you added comment likes
+  likedBy?: string[];
   onToggleLike?: () => Promise<ToggleResult>;
 }) {
   const name = `${commenter.firstName} ${commenter.lastName}`;
@@ -37,7 +38,7 @@ export default function CommentItem({
 
       <div className="min-w-0">
         <div className="flex items-baseline gap-2">
-          <p className="text-sm font-semibold leading-none">{name}</p>
+          <Link href={`/user/${commenter.id}`} className="text-sm font-semibold leading-none">{name}</Link>
           <p className="text-xs text-muted-foreground">{ts}</p>
         </div>
         <p className="text-sm text-foreground">{content}</p>

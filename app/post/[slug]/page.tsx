@@ -25,14 +25,14 @@ export default async function PostPage({
   const userId = session?.user?.id as string | undefined;
   const postLiked = userId ? post.likedBy.includes(userId) : false;
   const onTogglePost = toggleLikeAction.bind(null, post.id, post.slug);
-
+  const userLink = `/user/${post.author.id}`;
   const authorName = `${post.author.firstName} ${post.author.lastName}`;
   const createdAt = new Date(post.createdAt).toLocaleString();
 
   return (
     <div className="pt-6 md:pt-10">
       <article className="bg-background mx-auto max-w-3xl space-y-4 rounded-lg border p-4 md:p-6 shadow-sm">
-        <PostHeader authorName={authorName} authorImage={post.author.image} createdAt={createdAt} />
+        <PostHeader authorName={authorName} authorImage={post.author.image} createdAt={createdAt} userLink={userLink}/>
 
         <h2 className="text-3xl font-bold tracking-tight md:text-4xl">{post.title}</h2>
 
@@ -60,6 +60,7 @@ export default async function PostPage({
                   content={c.content}
                   createdAt={c.createdAt}
                   commenter={{
+                    id: c.commenter.id,
                     firstName: c.commenter.firstName,
                     lastName: c.commenter.lastName,
                     image: c.commenter.image,

@@ -1,40 +1,44 @@
-import { createPost } from "@/lib/posts";
 import React from "react";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { Textarea } from "./ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import TagSelector from "./TagSelector";
+import { handleCreatePost } from "./actions";
+import { Label } from "@radix-ui/react-label";
 
 function PostForm() {
-  async function handleCreatePost(formdata: FormData) {
-    "use server";
-    const title = formdata.get("title") as string;
-    const content = formdata.get("content") as string;
-    const authorId = formdata.get("authorId") as string;
-    const tags = formdata.getAll("tags") as string[];
-    if (title && content) {
-      await createPost(title, content, authorId, tags);
-    }
-  }
   return (
-    <div className="w-xl">
-      <form 
-      action={handleCreatePost}
-      className="space-y-4 rounded-lg p-6">
-        <h1 className='text-4xl font-bold mb-6 tracking-tight text-balance'>Share what's on your mind with us.</h1>
-        <Input className="pb-2"
-          id="title"
-          name="title"
-          type="text"
-          placeholder="Title"
-          required
-        />
-        <Textarea className="pb-2"
-          id="content"
-          name="content"
-          placeholder="Content (Optional)"
-          required
-        />
-        <Button className="w-full" type="submit">+ Create Post</Button>
+    <div className="w-sm sm:w-3xl">
+      <form action={handleCreatePost} className="space-y-4 rounded-lg">
+        <h1 className="text-4xl font-bold mb-6 tracking-tight text-balance">
+          Share what's on your mind.
+        </h1>
+        <div className="grid gap-1">
+          <Label htmlFor="title">Title<a className="text-red-500">*</a></Label>
+          <Input
+            id="title"
+            name="title"
+            type="text"
+            placeholder="Title"
+            required
+          />
+        </div>
+        <div className="grid gap-1">
+          <Label htmlFor="content">Content</Label>
+          <Textarea
+            id="content"
+            name="content"
+            placeholder="Content (Optional)"
+            required
+          />
+        </div>
+        <div className="grid gap-1">
+          <Label htmlFor="tags">Tags</Label>
+          <TagSelector />
+        </div>
+        <Button className="w-full" type="submit">
+          + Create Post
+        </Button>
       </form>
     </div>
   );

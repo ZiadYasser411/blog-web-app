@@ -1,12 +1,10 @@
-import PostForm from '@/components/PostForm';
-import { getPosts } from '@/lib/posts';
-import React from 'react'
+import PostForm from "./PostForm";
+import React from "react";
 
-export default async function PostsPage() {
-    const posts = await getPosts();
+export default async function PostingPage() {
   return (
-    <div className='flex flex-col items-center justify-center pt-12'>
+    <div className="flex flex-col items-center justify-center pt-10">
       <PostForm />
     </div>
-  )
+  );
 }

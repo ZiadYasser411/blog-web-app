@@ -1,17 +1,45 @@
+"use client";
+import { useState } from "react"
+import { signIn } from "next-auth/react"
 import { GalleryVerticalEnd } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { loginUser } from "@/lib/users"
 
-export function LoginForm({
+export default function LoginForm({
   className,
+  callbackUrl = "/",
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<"div"> & {callbackUrl?: string}) {
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError(null);
+    setPending(true);
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email");
+    const password = formData.get("password");
+    const res = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+      callbackUrl,
+    });
+    setPending(false);
+    if (res?.error) {
+      setError(res.error || "Invalid email or password");
+      return;
+    }
+    if (res?.ok) {
+      window.location.href = res.url ?? callbackUrl;
+    }
+  }
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <form action={loginUser}>
+      <form onSubmit={onSubmit}>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col items-center gap-2">
             <a
@@ -38,6 +66,7 @@ export function LoginForm({
                 id="email"
                 type="email"
                 placeholder="m@example.com"
+                name="email"
                 required
               />
             </div>
@@ -55,6 +84,7 @@ export function LoginForm({
                 id="password"
                 type="password"
                 placeholder="password"
+                name="password"
                 required
               />
             </div>

@@ -1,18 +1,18 @@
 import React from "react";
 import { GalleryVerticalEnd } from "lucide-react"
-import { createUser } from "@/lib/users";
+import { registerAction } from "@/app/register/actions";
 import { cn } from "@/lib/utils"
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { Label } from "./ui/label";
-export function RegisterForm({
+import { Input } from "../../components/ui/input";
+import { Button } from "../../components/ui/button";
+import { Label } from "../../components/ui/label";
+export default function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <form action={createUser}>
+      <form action={registerAction}>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col items-center gap-2">
             <a

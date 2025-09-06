@@ -20,30 +20,6 @@ const basePostSelect = {
   },
 };
 
-function slugify(title: string) {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, "")
-    .replace(/\s+/g, "-")
-    .trim();
-}
-
-// very simple collision handler: base, base-2, base-3, ...
-async function uniqueSlug(base: string, excludeId?: string) {
-  let candidate = base || "post";
-  let suffix = 2;
-  while (true) {
-    const existing = await prisma.post.findFirst({
-      where: excludeId
-        ? { slug: candidate, NOT: { id: excludeId } }
-        : { slug: candidate },
-      select: { id: true },
-    });
-    if (!existing) return candidate;
-    candidate = `${base}-${suffix++}`;
-  }
-}
-
 export const postRepository = {
   listAllPosts: () => {
     return prisma.post.findMany({

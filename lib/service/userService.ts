@@ -35,7 +35,7 @@ export async function createUser(
     throw Object.assign(new Error("Username already exists"), { status: 409 });
   const hashedPassword = await bcrypt.hash(password, 12);
   return userRepository.createUser({
-    email,
+    email: email.toLowerCase(),
     password: hashedPassword,
     firstName,
     lastName,

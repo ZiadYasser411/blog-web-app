@@ -13,7 +13,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const email = credentials?.email as string;
+        const email = credentials?.email.toLowerCase() as string;
         const password = credentials?.password as string;
         if (!email || !password) {
           throw new Error("Email and password are required");
@@ -28,7 +28,11 @@ export const authOptions: NextAuthOptions = {
         if (!isPasswordCorrect) {
           throw new Error("Incorrect password");
         }
-        return {id: user.id, email: user.email, name: `${user.firstName} ${user.lastName}` as string};
+        return {id: user.id, 
+          email: user.email, 
+          firstName: user.firstName,
+          lastName: user.lastName,
+          image: user.image};
       },
     }),
   ],

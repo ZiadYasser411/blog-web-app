@@ -16,7 +16,7 @@ export async function handleCreatePost(formdata: FormData) {
     const formTags = formdata.getAll("tags") as string[];
     const selectedTags = formTags.filter((tag) => allowedTags.has(tag as any)) as Tag[];
     if (title && content) {
-      await createPost(title, content, authorId, selectedTags);
+      const post = await createPost(title, content, authorId, selectedTags);
+      redirect(`/post/${post.slug}`);
     }
-    redirect("/posts");
   }

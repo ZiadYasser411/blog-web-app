@@ -17,8 +17,11 @@ export async function editComment(id: string, commenterId: string, sessionId: st
 }
 
 export async function deleteComment(id: string, commenterId: string, sessionId: string) {
-    if(!id) throw Object.assign(new Error("Id is required"));
-    if(sessionId !== commenterId) throw Object.assign(new Error("Unauthorized"), { status: 403 });
+    if(!id) 
+        throw Object.assign(new Error("Id is required"), { status: 400 });
+    if(!commenterId) throw Object.assign(new Error("Commenter id is required"), { status: 400 });
+    if(sessionId !== commenterId) 
+        throw Object.assign(new Error("Unauthorized"), { status: 403 });
     commentRepository.deleteComment(id);
     return { deleted: true };
 }

@@ -1,12 +1,12 @@
 "use server";
 import { Tag } from "@prisma/client";
-import { createPost, toggleLike } from "@/lib/service/postService";
+import { createPost, deletePost, toggleLike } from "@/lib/service/postService";
 import { toggleLike as toggleCommentLike } from "@/lib/service/commentService";
 import { requireSession } from "@/lib/auth/require-session";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { TAG_OPTIONS } from "@/lib/constants/tags";
-import { createComment } from "@/lib/service/commentService";
+import { createComment, deleteComment } from "@/lib/service/commentService";
 
 const allowedTags = new Set(TAG_OPTIONS);
 
@@ -47,6 +47,20 @@ export async function toggleLikeAction(postId: string, slug?: string) {
 export async function toggleCommentLikeAction(commentId: string, slug?: string) {
   const { user } = await requireSession();
   const res = await toggleCommentLike(commentId, user.id);
+  if (slug) revalidatePath(`/post/${slug}`);
+  return res;
+}
+
+export async function handleDeleteComment(commentId: string, commenterId: string, slug?: string) {
+  const { user } = await requireSession();
+  const res = await deleteComment(commentId, commenterId, user.id);
+  if (slug) revalidatePath(`/post/${slug}`);
+  return res;
+}
+
+export async function handleDeletePost(postId: string, authorId: string, slug?: string) {
+  const { user } = await requireSession();
+  const res = await deletePost(postId, authorId, user.id);
   if (slug) revalidatePath(`/post/${slug}`);
   return res;
 }

@@ -21,7 +21,9 @@ export const commentRepository = {
   },
 
   deleteComment: (id: string) => {
-    return prisma.comment.delete({ where: { id }, select: { id: true } });
+    return prisma.$transaction([
+      prisma.comment.delete({ where: { id } }),
+    ]);
   },
 
   editComment: (id: string, content: string) => {

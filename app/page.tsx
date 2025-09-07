@@ -17,7 +17,7 @@ export default async function Home() {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id)
     redirect(`login?callbackUrl=${encodeURIComponent("/")}`);
-  const posts = getAllPosts();
+  const posts = await getAllPosts();
   if (!posts) notFound();
   const userId = session?.user?.id as string | undefined;
 
@@ -25,7 +25,7 @@ export default async function Home() {
     <div className="p-6 md:p-10">
       <SignOutButton />
        <div className="mx-auto max-w-3xl space-y-4 md:space-y-6">
-      {(await posts).map((post) => {
+      {(posts).map((post) => {
         const postLiked = userId ? post.likedBy.includes(userId) : false;
         const onTogglePost = toggleLikeAction.bind(null, post.id, post.slug);
         const userLink = `/user/${post.author.id}`;
@@ -41,6 +41,9 @@ export default async function Home() {
               authorImage={post.author.image}
               createdAt={createdAt}
               userLink={userLink}
+              postId={post.id}
+              authorId={post.author.id}
+              sessionId={userId}
             />
             <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
               {post.title}

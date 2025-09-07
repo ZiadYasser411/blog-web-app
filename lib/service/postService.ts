@@ -65,4 +65,9 @@ export async function toggleLike(postId: string, userId: string) {
   return postRepository.toggleLike(postId, userId);
 }
 
+export async function getPostsByAuthorId(authorId: string) {
+  if(!authorId) throw Object.assign(new Error("Author id is required"), { status: 400 });
+  return postRepository.getPostsByAuthor(authorId);
+}
+
 

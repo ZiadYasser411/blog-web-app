@@ -31,3 +31,8 @@ export async function toggleLike(commentId: string, userId: string) {
     if(!userId) throw Object.assign(new Error("User id is required"));
     return commentRepository.toggleLike(commentId, userId);
 }
+
+export async function getCommentsByCommenterId(commenterId: string) {
+    if(!commenterId) throw Object.assign(new Error("Author id is required"));
+    return commentRepository.getCommentsByCommenter(commenterId);
+}

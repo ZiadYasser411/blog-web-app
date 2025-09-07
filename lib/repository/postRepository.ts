@@ -1,4 +1,3 @@
-import { get } from "http";
 import prisma from "../prisma";
 import { Tag } from "@prisma/client";
 
@@ -151,4 +150,27 @@ export const postRepository = {
     });
     return !!existing;
   },
+
+  getPostsByAuthor: (authorId: string) => {
+    return prisma.post.findMany({
+      where: { authorId },
+      select: {
+        ...basePostSelect,
+        _count: { select: { comments: true } },
+        comments: {
+          orderBy: { createdAt: "desc" },
+          include: {
+            commenter: {
+              select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                image: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
 };

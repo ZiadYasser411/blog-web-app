@@ -48,4 +48,19 @@ export const commentRepository = {
       return { liked: !liked, likeCount: updated.likedBy.length };
     });
   },
+
+  getCommentsByCommenter: (commenterId: string) => {
+    return prisma.comment.findMany({
+      where: { commenterId },
+      orderBy: { createdAt: "desc" },
+      select: { 
+        id: true, 
+        content: true, 
+        createdAt: true, 
+        updatedAt: true,
+        post: { select: { id: true, title: true, slug: true } },
+        commenter: { select: { id: true, firstName: true, lastName: true, image: true } },
+      },
+    });
+  },
 };

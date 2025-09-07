@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth/options";
 import { redirect } from "next/navigation";
-import LoginForm from "./LoginForm";
+import LoginForm from "../../components/auth/LoginForm";
 
 export default async function LoginPage({ searchParams }: {
   searchParams?: { callbackUrl?: string };

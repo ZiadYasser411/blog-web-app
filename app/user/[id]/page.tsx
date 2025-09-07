@@ -1,7 +1,12 @@
+import PostList from "@/components/posts/PostList";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenuUser } from "@/components/ui/dropdownUser";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { requireSession } from "@/lib/auth/require-session";
+import { getCommentsByCommenterId } from "@/lib/service/commentService";
+import { getPostsByAuthorId } from "@/lib/service/postService";
 import { getUser } from "@/lib/service/userService";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export default async function UserPage({
@@ -23,8 +28,12 @@ export default async function UserPage({
     .join("")
     .slice(0, 2)
     .toUpperCase();
+  const [posts, comments] = await Promise.all([
+    getPostsByAuthorId(id),
+    getCommentsByCommenterId(id),
+  ]);
   return (
-    <div className="pt-6 md:pt-10">
+    <div className="p-6 md:pt-10">
       <div className="bg-background mx-auto max-w-3xl space-y-4 rounded-lg border p-4 md:p-6 shadow-sm">
         <div className="flex">
           <header className="flex items-center flex-1 gap-3">
@@ -48,6 +57,39 @@ export default async function UserPage({
             <DropdownMenuUser userId={user.id} sessionId={session.user.id} />
           ) : null}
         </div>
+        <Tabs defaultValue="posts" className="w-full">
+          <TabsList>
+            <TabsTrigger value="posts">Posts</TabsTrigger>
+            <TabsTrigger value="comments">Comments</TabsTrigger>
+            <TabsTrigger value="changepassword">Change Password</TabsTrigger>
+          </TabsList>
+          <TabsContent value="posts">
+            {posts.length > 0 ? (<PostList posts={posts} currentUserId={user.id} />) : (<p className="text-muted-foreground text-sm">No posts by {authorName} yet.</p>)}
+          </TabsContent>
+          <TabsContent value="comments">
+            {comments.length ? (
+              <ul className="space-y-3">
+                {comments.map((c) => (
+                  <li key={c.id} className="rounded-md border p-3">
+                    <div className="mb-1 text-sm text-muted-foreground">
+                      on{" "}
+                      <Link className="text-emerald-600 font-semibold" href={`/post/${c.post.slug}`}>
+                        {c.post.title}
+                      </Link>{" "}
+                      • {new Date(c.createdAt).toLocaleString()}
+                    </div>
+                    <div className="text-sm">{c.content}</div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-muted-foreground text-sm">No comments by {authorName} yet.</p>
+            )}
+          </TabsContent>
+          <TabsContent value="changepassword">
+            Whoops! Not developed yet!
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

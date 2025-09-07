@@ -1,4 +1,4 @@
-import PostForm from "./PostForm";
+import PostForm from "../../components/posts/PostForm";
 import React from "react";
 
 export default async function PostingPage() {

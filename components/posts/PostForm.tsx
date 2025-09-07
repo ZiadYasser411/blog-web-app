@@ -2,9 +2,9 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import TagSelector from "./TagSelector";
-import { handleCreatePost } from "./actions";
-import { Label } from "@radix-ui/react-label";
+import TagSelector from "@/components/posts/TagSelector";
+import { handleCreatePost } from "../../app/post/actions";
+import { Label } from "@/components/ui/label";
 
 function PostForm() {
   return (

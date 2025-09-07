@@ -1,10 +1,10 @@
 import { getPostBySlug } from "@/lib/service/postService";
 import { notFound } from "next/navigation";
-import PostHeader from "@/components/posts/postheader";
-import TagChips from "@/components/posts/tags";
-import PostEngagement from "@/components/posts/postengagement";
-import CommentForm from "@/components/comments/commentsform";
-import CommentItem from "@/components/comments/commentitem";
+import PostHeader from "@/components/posts/PostHeader";
+import TagChips from "@/components/posts/Tags";
+import PostEngagement from "@/components/posts/PostEngagement";
+import CommentForm from "@/components/comments/CommentsForm";
+import CommentItem from "@/components/comments/CommentItem";
 import { handleCreateComment } from "../actions";
 import { toggleLikeAction, toggleCommentLikeAction } from "@/app/post/actions";
 import { getServerSession } from "next-auth";

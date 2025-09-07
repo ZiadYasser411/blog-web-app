@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import TagSelector from "@/components/posts/TagSelector";
 import { handleCreatePost } from "../../app/post/actions";
 import { Label } from "@/components/ui/label";
+import { PlusCircle } from "lucide-react";
 
 function PostForm() {
   return (
@@ -37,7 +38,8 @@ function PostForm() {
           <TagSelector />
         </div>
         <Button className="w-full" type="submit">
-          + Create Post
+          <PlusCircle className="h-4 w-4" />
+          Create Post
         </Button>
       </form>
     </div>

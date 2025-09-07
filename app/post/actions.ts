@@ -1,7 +1,7 @@
 "use server";
 import { Tag } from "@prisma/client";
-import { createPost, deletePost, toggleLike } from "@/lib/service/postService";
-import { toggleLike as toggleCommentLike } from "@/lib/service/commentService";
+import { createPost, deletePost, editPost, toggleLike } from "@/lib/service/postService";
+import { editComment, toggleLike as toggleCommentLike } from "@/lib/service/commentService";
 import { requireSession } from "@/lib/auth/require-session";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -63,4 +63,25 @@ export async function handleDeletePost(postId: string, authorId: string, slug?: 
   const res = await deletePost(postId, authorId, user.id);
   if (slug) revalidatePath(`/post/${slug}`);
   return res;
+}
+
+export async function handleEditPost(postId: string, formData: FormData){
+  const { user } = await requireSession();
+  const id = user.id;
+  const post = postId;
+  const authorId = formData.get("authorId") as string;
+  const title = formData.get("title") as string;
+  const content = formData.get("content") as string;
+  await editPost(post, authorId, id, title, content);
+  revalidatePath(`/post/${formData.get("slug")}`);
+}
+
+export async function handleEditComment(commentId: string, formData: FormData){
+  const { user } = await requireSession();
+  const id = user.id;
+  const comment = commentId;
+  const commenterId = formData.get("commenterId") as string;
+  const content = formData.get("content") as string;
+  await editComment(comment, commenterId, id, content);
+  revalidatePath(`/post/${formData.get("slug")}`);
 }

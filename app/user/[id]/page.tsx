@@ -54,7 +54,7 @@ export default async function UserPage({
             </div>
           </header>
           {user.id === session.user.id ? (
-            <DropdownMenuUser userId={user.id} sessionId={session.user.id} />
+            <DropdownMenuUser userId={user.id} sessionId={session.user.id} firstName={user.firstName} lastName={user.lastName} username={user.username} />
           ) : null}
         </div>
         <div className="pt-2">
@@ -62,7 +62,6 @@ export default async function UserPage({
             <TabsList>
               <TabsTrigger value="posts">Posts</TabsTrigger>
               <TabsTrigger value="comments">Comments</TabsTrigger>
-              <TabsTrigger value="changepassword">Change Password</TabsTrigger>
             </TabsList>
             <TabsContent value="posts">
               {posts.length > 0 ? (<PostList posts={posts} currentUserId={user.id} />) : (<p className="text-muted-foreground text-sm">No posts by {authorName} yet.</p>)}
@@ -86,9 +85,6 @@ export default async function UserPage({
               ) : (
                 <p className="text-muted-foreground text-sm">No comments by {authorName} yet.</p>
               )}
-            </TabsContent>
-            <TabsContent value="changepassword">
-              Whoops! Not developed yet!
             </TabsContent>
           </Tabs>
         </div>
